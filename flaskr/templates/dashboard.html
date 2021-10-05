@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+Voting Page
+{% endblock %}
+
+{% block head %}
+<style>
+    body, html {
+        overflow: hidden;
+    }
+</style>
+
+<script> type="text/javascript">
+    (function() {
+        var css = document.createElement('link');
+        css.href = 'https://use.fontawesome.com/releases/v5.15.4/css/all.css';
+        css.rel = 'stylesheet';
+        css.type = 'text/css';
+        css.integrity = 'sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm'
+        css.crossOrigin = 'anonymous'
+        document.getElementsByTagName('head')[0].appendChild(css);
+    })();
+</script>
+
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+
+{% block body %}
+<div class="slider-container">
+    {% for person in candidates %}
+        <div class="slide">
+            <div class="img-container">
+                <img src="/static/{{ person.candidate_photo }}">
+                <div class="info">
+                    <h2>{{ person.candidate_name }}</h2>
+                    <h4>{{ person.candidate_descr }}</h4>
+                    <div class="rating">
+                        <i class="rating__star_{{ loop.index }} far fa-star fa-3x"></i>
+                        <i class="rating__star_{{ loop.index }} far fa-star fa-3x"></i>
+                        <i class="rating__star_{{ loop.index }} far fa-star fa-3x"></i>
+                        <i class="rating__star_{{ loop.index }} far fa-star fa-3x"></i>
+                        <i class="rating__star_{{ loop.index }} far fa-star fa-3x"></i>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="slide">
+        <div class="img-container">
+            <div class="info">
+                <form method="POST" id="vote-form">
+                    {% for person in candidates %}
+                    <input id="vote_{{ loop.index }}" class="vote" type="number" name="score_{{ loop.index }}" value="" required>
+                    {% endfor %}
+                    <input class="btn sbmt-btn" type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+@import url(https://fonts.googleapis.com/css?family=Inter);
+
+body, html {
+  font-family: "Inter", sans-serif;
+  height: 100%;
+  width: 100%;
+  background-color: #333;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Disabling highlighting when hitting links&buttons */
+button,
+a {
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.container {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#addcand {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.nav {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.container button, a {
+  width: 90%;
+}
+
+input[type=text], input[type=password], textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  background-color: #bbb;
+  opacity: 0.5;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+}
+
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.form-group {
+  width: 90%;
+}
+
+.btn {
+  background-color: #444;
+  color: white;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  text-align: center;
+  font-size: 1rem;
+}
+
+#result-btn {
+  margin-top: 0.5rem;
+}
+
+.back-btn {
+  background-color: #222;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+
+#chooser {
+  height: 100vh;
+  width: 100vw;
+  display: inline-flex;
+}
+
+#login {
+  width: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #444;
+  font-size: 2rem;
+}
+
+#register {
+  width: 50%;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #222;
+  font-size: 2rem;
+}
+
+#candphoto {
+  margin-bottom: 0.5rem;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+}
+
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+  text-align: center;
+  max-width: 100%;
+}
+
+th, td {
+  padding: 0.25rem;
+}
+
+td img {
+  width: 4.5rem;
+  height: 8rem;
+}
+
+td {
+  padding-bottom: 0;
+}
+
+table caption {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+}
