@@ -16,7 +16,8 @@ body, html {
 
 /* Disabling highlighting when hitting links&buttons */
 button,
-a {
+a,
+.btn {
 -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
@@ -37,14 +38,13 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .nav {
   width: 90%;
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .container button, a {
@@ -85,6 +85,8 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 
 #result-btn {
   margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .back-btn {
@@ -127,6 +129,33 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
   font-size: 1rem;
 }
 
+table {
+  width: 62vw;
+}
+
+.jury-del-btn {
+  margin-bottom: 0.25rem;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vr-btn {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.vipe-results {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 table, th, td {
   border: 1px solid white;
   border-collapse: collapse;
@@ -150,4 +179,13 @@ td {
 table caption {
   font-size: 2.5rem;
   margin: 0.5rem 0;
+}
+
+span {
+  font-size: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+#main-page {
+  margin-bottom: 0.5rem;
 }

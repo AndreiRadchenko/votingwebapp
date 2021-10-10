@@ -1,0 +1,4 @@
+
+docker build -t votingwebapp:v02 . --load
+
+docker run --restart always -d --name=vwa --mount source=flaskr,destination=/root -p 5001:5000 votingwebapp:v02

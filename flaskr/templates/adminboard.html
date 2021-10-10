@@ -29,17 +29,16 @@ Admin's Page
                 <td>{{ person.candidate_descr }}</td>
                 <td><img src="/static/{{ person.candidate_photo }}"></td>
                 <td>
-                    <form method="POST">
-                        <input class="btn" type="submit" name="{{ person.candidate_name}}" value="Delete">
-                    </form></td>
+                    <form method="POST" onsubmit="return confirmation();">
+                        <input class="btn" type="submit" name="{{ person.candidate_name }}" value="Delete">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <a id="result-btn" class="btn" href="/results">See Voting's Results</a>
-
-    <h2>Add a candidate:</h2>
+    <span>Add a candidate:</span>
     <form id="addcand" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ wtf.form_field(form.candname) }}
@@ -48,9 +47,64 @@ Admin's Page
         <button class="btn" type="submit">Upload</button>
     </form>
 
-    <div class="nav">
-        <a class="back-btn btn" href="/">Main Page</a>
-        <a class="back-btn btn" href="{{ url_for('logout') }}">Log Out</a>
+    <table>
+        <caption>Juries</caption>
+        <thead>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Action</th>
+        </thead>
+        <tbody>
+            {% for person in juries %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ person.username }}</td>
+                <td>
+                    <form method="POST" onsubmit="return confirmation();">
+                        <input class="btn jury-del-btn" type="submit" name="{{ person.username }}" value="Delete">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="results">
+        <table>
+            <caption>Results</caption>
+            <thead>
+                <th>No.</th>
+                <th>Jury's name</th>
+                <th>Candidate's name</th>
+                <th>Score</th>
+            </thead>
+            <tbody>
+                {% for writing in votes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ writing.jury_name }}</td>
+                    <td>{{ writing.candidate_name }}</td>
+                    <td>{{ writing.rating }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form method="POST" class="vipe-results" onsubmit="return confirmation();">
+            <input class="btn vr-btn" type="submit" name="vipe-results" value="Vipe Results">
+        </form>
+
+        <a id="result-btn" class="btn" href="/results" download>Download Results</a>
     </div>
+
+    <a class="back-btn btn" id="main-page" href="/">Main Page</a>
+
 </div>
+
+<script>
+    function confirmation() {
+        var x = confirm("The data will be lost.\nAre you sure?");
+        return x
+    }
+</script>
 {% endblock %}
