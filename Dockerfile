@@ -28,5 +28,5 @@ RUN cd /root/flaskr && \
     pip3 install -r requirements.txt
 
 
-CMD cd /root/flaskr && \
+CMD cd /root/flaskr/flaskr && \
     python3 vwa.py
