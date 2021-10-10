@@ -5,13 +5,14 @@ from wtforms import StringField, PasswordField, FileField, TextAreaField
 from wtforms.validators import InputRequired, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user#, logout_user
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Ahardtoguesstext?'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSON_SORT_KEYS'] = False
 Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -40,16 +41,16 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=2, max=16)])
+    username = StringField('Username', validators=[InputRequired(), Length(max=16)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=2, max=16)])
+    username = StringField('Username', validators=[InputRequired(), Length(max=16)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class AdminForm(FlaskForm):
-    candname = StringField('Candidate Name', validators=[InputRequired(), Length(min=2, max=16)])
-    candphoto = FileField('Candidate Photo', validators=[InputRequired()])
+    candname = StringField('Candidate Name (Note: must be unique)', validators=[InputRequired(), Length(max=16)])
+    candphoto = FileField('Candidate Photo (Note: must be unique)', validators=[InputRequired()])
     canddescr = TextAreaField('Candidate Description', validators=[InputRequired()])
 
 @app.route('/')
@@ -120,7 +121,7 @@ def dashboard():
         else:
             return 'You have already voted.'
 
-    return render_template('dashboard.html', name=current_user.username, candidates=candidates)
+    return render_template('dashboard.html', candidates=candidates)
 
 @app.route('/adminboard', methods=['GET', 'POST'])
 @login_required
@@ -128,25 +129,46 @@ def adminboard():
     if current_user.username == 'admin':
         form = AdminForm()
         candidates = Candidate.query.all()
+        juries = User.query.all()
+        admin = User.query.filter_by(username='admin').first()
+        juries.remove(admin)
+        votes = Votes.query.all()
 
-        if form.validate_on_submit(): #adding to the database
-            form.candphoto.data.save(os.path.join('static', form.candphoto.data.filename))
-            new_cand = Candidate(candidate_name=form.candname.data, candidate_photo=form.candphoto.data.filename, candidate_descr=form.canddescr.data)
-            db.session.add(new_cand)
-            db.session.commit()
-            return redirect(url_for('adminboard'))
+        if form.validate_on_submit(): #adding candidates to the database
+            if Candidate.query.filter_by(candidate_name=form.candname.data).first():
+                return 'Candidate with that name already exists'
+            elif Candidate.query.filter_by(candidate_photo=form.candphoto.data.filename).first():
+                return 'Candidate with that photo filename already exists'
+            else:
+                new_cand = Candidate(candidate_name=form.candname.data, candidate_photo=form.candphoto.data.filename, candidate_descr=form.canddescr.data)
+                form.candphoto.data.save(os.path.join('static', form.candphoto.data.filename))
+                db.session.add(new_cand)
+                db.session.commit()
+                return redirect(url_for('adminboard'))
         
-        if request.method == 'POST': #deleting from the database
-            for i in range(len(candidates)):
+        if request.method == 'POST':
+            if 'vipe-results' in request.form: #viping results
+                for i in range(len(votes)):
+                    db.session.delete(votes[i])
+                db.session.commit()
+                return redirect(url_for('adminboard')) 
+
+            for i in range(len(juries)): #deleting users(juries) from the database
+                if juries[i].username in request.form:
+                    prey = User.query.filter_by(username=juries[i].username).first()
+                    db.session.delete(prey)
+                    db.session.commit()
+                    return redirect(url_for('adminboard')) 
+
+            for i in range(len(candidates)): #deleting candidates from the database
                 if candidates[i].candidate_name in request.form:
                     prey = Candidate.query.filter_by(candidate_name=candidates[i].candidate_name).first()
                     os.remove(os.path.join('static', prey.candidate_photo))
                     db.session.delete(prey)
                     db.session.commit()
-                    break
-            return redirect(url_for('adminboard'))
+                    return redirect(url_for('adminboard')) 
 
-        return render_template('adminboard.html', candidates=candidates, form=form)
+        return render_template('adminboard.html', candidates=candidates, juries=juries, votes=votes, form=form)
     else:
         return redirect(url_for('login'))
 
@@ -173,11 +195,11 @@ def results():
         
         return jsonify(x)
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
+#@app.route('/logout')
+#@login_required
+#def logout():
+#    logout_user()
+#    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
