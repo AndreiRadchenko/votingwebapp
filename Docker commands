@@ -1,4 +1,7 @@
 
 docker build -t votingwebapp:v05 . --load
 
-docker run --restart always -d --name=vwa --mount source=flaskr,destination=/root/flaskr -p 5001:5000 votingwebapp:v05
+docker run --restart always -d --name=vwa --mount source=flaskr,destination=/root/flaskr/flaskr -p 5001:5000 votingwebapp:v05
+                                                                                  /\        /\
+                                                                                   |         |
+                                                            root project name/directory    working directory, where project files are
